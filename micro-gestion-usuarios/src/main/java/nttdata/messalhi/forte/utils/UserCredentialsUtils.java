@@ -7,7 +7,7 @@ import java.security.SecureRandom;
 public class UserCredentialsUtils {
     public String generateSalt() {
         SecureRandom random = new SecureRandom();
-        byte bytes[] = new byte[8];
+        byte[] bytes = new byte[8];
         random.nextBytes(bytes);
         return bytesToHex(bytes);
     }

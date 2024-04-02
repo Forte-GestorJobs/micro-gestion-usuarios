@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
-public class TestUserCredentials {
+class TestUserCredentials {
     @Autowired
     private MockMvc server;
 
@@ -82,7 +82,6 @@ public class TestUserCredentials {
     @Test
     void testAddError()throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        //CreateUserCredential();
 
         String requestBody = "{ \"username\": \"firstUserTest\", \"password\": \"firstPasswordTest\" }";
 
@@ -98,7 +97,6 @@ public class TestUserCredentials {
     @Test
     void testGetOk()throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        //CreateUserCredential();
         RequestBuilder request = MockMvcRequestBuilders
                 .get("/user/UserCredentials/firstUserTest")
                 .contentType(MediaType.APPLICATION_JSON);
@@ -133,7 +131,6 @@ public class TestUserCredentials {
     @Test
     void testUpdateOk()throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        //CreateUserCredential();
         String requestBody = "{ \"username\": \"firstUserTest\", \"password\": \"passTest\" }";
 
         RequestBuilder request = MockMvcRequestBuilders
@@ -147,7 +144,6 @@ public class TestUserCredentials {
     @Test
     void testUpdateError()throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        //CreateUserCredential();
         String requestBody = "{ \"username\": \"InvalidUser\", \"password\": \"passTest\" }";
 
         RequestBuilder request = MockMvcRequestBuilders
@@ -162,7 +158,6 @@ public class TestUserCredentials {
     @Test
     void testCheckUserOk()throws Exception{
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        //CreateUserCredential();
         String requestBody = "{ \"username\": \"firstUserTest\", \"password\": \"firstPasswordTest\" }";
 
         RequestBuilder request = MockMvcRequestBuilders
@@ -177,7 +172,6 @@ public class TestUserCredentials {
     @Test
     void testCheckUserError1()throws Exception{
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        //CreateUserCredential();
         String requestBody = "{ \"username\": \"firstUserTest\", \"password\": \"invalidPass\" }";
 
         RequestBuilder request = MockMvcRequestBuilders
@@ -191,8 +185,7 @@ public class TestUserCredentials {
     @Test
     void testCheckUserError2()throws Exception{
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        //CreateUserCredential();
-        String requestBody = "{ \"username\": \"InvalidUser\", \"password\": \"passTest\" }";
+        String requestBody = "{ \"username\": \"InvalidUser\", \"password\": \"firstPasswordTest\" }";
 
         RequestBuilder request = MockMvcRequestBuilders
                 .post("/user/UserCredentials/checkUser")

@@ -23,7 +23,7 @@ import java.util.Date;
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
-public class TestUserInfo {
+class TestUserInfo {
     @Autowired
     private MockMvc server;
 

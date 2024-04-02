@@ -6,23 +6,14 @@ import nttdata.messalhi.forte.entities.UserCredentials;
 import nttdata.messalhi.forte.entities.UserInfo;
 import nttdata.messalhi.forte.utils.DatabaseResult;
 import nttdata.messalhi.forte.utils.UserCredentialsUtils;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
 import java.util.Optional;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 @Service
 public class UserCredentialsRaceService{
-    private static final Logger log = LoggerFactory.getLogger(UserCredentialsRaceService.class);
-    public static final String HashAlgorithm = "SHA-256";
+    String userCredentialsName = "UserCredentials ";
     @Autowired
     private UserCredentialsDAO userCredentialsDAO;
     @Autowired
@@ -34,9 +25,10 @@ public class UserCredentialsRaceService{
         return optUser.isPresent();
     }
     public DatabaseResult addUserCredentials(String username, String password) {
+        String ucExists = userCredentialsName + username + " already exists.";
         try {
             if (existsUser(username)) {
-                return new DatabaseResult(false, "UserCredentials " + username + " already exists.");
+                return new DatabaseResult(false, ucExists);
             } else {
                 // Verificar si existe un UserInfo correspondiente
                 UserInfo userInfo = userInfoDAO.findById(username).orElse(null);
@@ -47,10 +39,10 @@ public class UserCredentialsRaceService{
 
                 // Generar salt y hash para la contraseña
                 String salt = userCredentialsUtils.generateSalt();
-                String password_hash = userCredentialsUtils.generateHash(password, salt);
+                String passwordHash = userCredentialsUtils.generateHash(password, salt);
 
                 // Crear UserCredentials con la información proporcionada
-                UserCredentials userCredentials = new UserCredentials(username, password_hash, salt);
+                UserCredentials userCredentials = new UserCredentials(username, passwordHash, salt);
 
                 // Establecer la relación con UserInfo
                 userCredentials.setUserInfo(userInfo);
@@ -58,7 +50,7 @@ public class UserCredentialsRaceService{
                 // Guardar UserCredentials en la base de datos
                 this.userCredentialsDAO.save(userCredentials);
 
-                return new DatabaseResult(true, "UserCredentials " + username + " added to the database.");
+                return new DatabaseResult(true, ucExists);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,7 +65,7 @@ public class UserCredentialsRaceService{
                 return new DatabaseResult(true, userCredentials.get().toStringJSON()); // Operación exitosa
             }
             else{
-                return new DatabaseResult(false, "UserCredentials "+ username + " not found");
+                return new DatabaseResult(false, userCredentialsName + username + " not found");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,7 +78,7 @@ public class UserCredentialsRaceService{
             if (existsUser(username)) {
                 this.userCredentialsDAO.deleteById(username);
             }
-            return new DatabaseResult(true, "UserCredentials " + username + " deleted");
+            return new DatabaseResult(true, userCredentialsName + username + " deleted");
         }catch (Exception e) {
             e.printStackTrace();
             return new DatabaseResult(false, e.getMessage());
@@ -94,21 +86,22 @@ public class UserCredentialsRaceService{
     }
 
     public DatabaseResult updateUserCredentials(String username, String password) {
+        String notFound = " not found";
         try {
             if (existsUser(username)) {
                 UserCredentials userCredentials = userCredentialsDAO.findById(username).orElse(null);
                 if (userCredentials != null) {
                     String salt = userCredentials.getSalt();
-                    String password_hash = userCredentialsUtils.generateHash(password, salt);
-                    userCredentials.setPassword(password_hash);
+                    String passwordHash = userCredentialsUtils.generateHash(password, salt);
+                    userCredentials.setPassword(passwordHash);
                     this.userCredentialsDAO.save(userCredentials);
 
-                    return new DatabaseResult(true, "UserCredentials " + username + " updated.");
+                    return new DatabaseResult(true, userCredentialsName + username + " updated.");
                 } else {
-                    return new DatabaseResult(false, "UserCredentials " + username + " not found");
+                    return new DatabaseResult(false, userCredentialsName + username + notFound);
                 }
             } else {
-                return new DatabaseResult(false, "UserCredentials " + username + " not found");
+                return new DatabaseResult(false, userCredentialsName + username + notFound);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -122,7 +115,7 @@ public class UserCredentialsRaceService{
             if (userCredentials != null){
                 String passwordHash = userCredentialsUtils.generateHash(password, userCredentials.getSalt());
                 if (passwordHash.equals(userCredentials.getPassword())){
-                    return new DatabaseResult(true, "UserCredentials OK");
+                    return new DatabaseResult(true, userCredentialsName + "OK");
                 }
                 else{
                     return new DatabaseResult(false, "Password Error");

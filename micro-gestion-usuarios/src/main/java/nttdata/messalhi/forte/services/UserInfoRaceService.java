@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @Service
 public class UserInfoRaceService {
+    String userInfoName = "UserInfo ";
     @Autowired
     private UserInfoDAO userInfoDAO;
 
@@ -26,14 +27,14 @@ public class UserInfoRaceService {
     public DatabaseResult addUserInfo(String username, String email, String type) {
         try {
             if (existsUser(username)) {
-                return new DatabaseResult(false, "UserInfo " + username +" already exists.");
+                return new DatabaseResult(false, userInfoName + username +" already exists.");
             }
             else{
                 UserInfo userInfo = new UserInfo(username, email, type);
-                Date last_access = new Date();
-                userInfo.setLast_access(last_access);
+                Date lastAccess = new Date();
+                userInfo.setLast_access(lastAccess);
                 this.userInfoDAO.save(userInfo);
-                return new DatabaseResult(true, "UserInfo " + username + " added to the database.");
+                return new DatabaseResult(true, userInfoName + username + " added to the database.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,7 +49,7 @@ public class UserInfoRaceService {
                 return new DatabaseResult(true, userInfo.get().toStringJSON()); // Operación exitosa
             }
             else{
-                return new DatabaseResult(false, "UserInfo "+ username + " not found");
+                return new DatabaseResult(false, userInfoName + username + " not found");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,7 +66,7 @@ public class UserInfoRaceService {
                 }
                 userInfoDAO.deleteById(username);
             }
-            return new DatabaseResult(true, "UserInfo " + username + " deleted");
+            return new DatabaseResult(true, userInfoName + username + " deleted");
         } catch (Exception e) {
             e.printStackTrace();
             return new DatabaseResult(false, e.getMessage());
@@ -74,14 +75,14 @@ public class UserInfoRaceService {
     public DatabaseResult updateUserInfo(String username, String email, String type) {
         try {
             if (existsUser(username)) {
-                Date last_access = new Date();
+                Date lastAccess = new Date();
                 UserInfo userInfo = new UserInfo(username, email, type);
-                userInfo.setLast_access(last_access);
+                userInfo.setLast_access(lastAccess);
                 this.userInfoDAO.save(userInfo);
-                return new DatabaseResult(true, "UserInfo " + username + " updated in the database.");
+                return new DatabaseResult(true, userInfoName + username + " updated in the database.");
             }
             else{
-                return new DatabaseResult(false, "UserInfo " + username + " not found");
+                return new DatabaseResult(false, userInfoName + username + " not found");
             }
         } catch (Exception e) {
             e.printStackTrace();
