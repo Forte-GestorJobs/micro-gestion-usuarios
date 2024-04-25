@@ -5,7 +5,7 @@ import nttdata.messalhi.forte.dao.UserCredentialsDAO;
 import nttdata.messalhi.forte.dao.UserInfoDAO;
 import nttdata.messalhi.forte.entities.UserCredentials;
 import nttdata.messalhi.forte.entities.UserInfo;
-import nttdata.messalhi.forte.utils.UserCredentialsUtils;
+import nttdata.messalhi.forte.utils.UserUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,7 +54,7 @@ class TestUserCredentials {
         this.userInfoDAO.save(userInfo2);
 
         String password = "firstPasswordTest";
-        UserCredentialsUtils userCredentialsUtils = new UserCredentialsUtils();;
+        UserUtils userCredentialsUtils = new UserUtils();;
         String salt = userCredentialsUtils.generateSalt();
         String password_hash = userCredentialsUtils.generateHash(password, salt);
         UserCredentials userCredentials = new UserCredentials(username1, password_hash, salt);

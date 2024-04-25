@@ -5,7 +5,7 @@ import nttdata.messalhi.forte.dao.UserInfoDAO;
 import nttdata.messalhi.forte.entities.UserCredentials;
 import nttdata.messalhi.forte.entities.UserInfo;
 import nttdata.messalhi.forte.utils.DatabaseResult;
-import nttdata.messalhi.forte.utils.UserCredentialsUtils;
+import nttdata.messalhi.forte.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class UserCredentialsRaceService{
     @Autowired
     private UserInfoDAO userInfoDAO;
 
-    private UserCredentialsUtils userCredentialsUtils = new UserCredentialsUtils();
+    private UserUtils userUtils = new UserUtils();
     public boolean existsUser(String username) {
         Optional<UserCredentials> optUser = this.userCredentialsDAO.findByUsername(username);
         return optUser.isPresent();
@@ -38,8 +38,8 @@ public class UserCredentialsRaceService{
                 }
 
                 // Generar salt y hash para la contraseña
-                String salt = userCredentialsUtils.generateSalt();
-                String passwordHash = userCredentialsUtils.generateHash(password, salt);
+                String salt = userUtils.generateSalt();
+                String passwordHash = userUtils.generateHash(password, salt);
 
                 // Crear UserCredentials con la información proporcionada
                 UserCredentials userCredentials = new UserCredentials(username, passwordHash, salt);
@@ -92,7 +92,7 @@ public class UserCredentialsRaceService{
                 UserCredentials userCredentials = userCredentialsDAO.findById(username).orElse(null);
                 if (userCredentials != null) {
                     String salt = userCredentials.getSalt();
-                    String passwordHash = userCredentialsUtils.generateHash(password, salt);
+                    String passwordHash = userUtils.generateHash(password, salt);
                     userCredentials.setPassword(passwordHash);
                     this.userCredentialsDAO.save(userCredentials);
 
@@ -113,7 +113,7 @@ public class UserCredentialsRaceService{
         try{
             UserCredentials userCredentials = userCredentialsDAO.findById(username).orElse(null);
             if (userCredentials != null){
-                String passwordHash = userCredentialsUtils.generateHash(password, userCredentials.getSalt());
+                String passwordHash = userUtils.generateHash(password, userCredentials.getSalt());
                 if (passwordHash.equals(userCredentials.getPassword())){
                     return new DatabaseResult(true, userCredentialsName + "OK");
                 }

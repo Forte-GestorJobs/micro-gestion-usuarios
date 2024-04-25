@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-public class UserCredentialsUtils {
+public class UserUtils {
     public String generateSalt() {
         SecureRandom random = new SecureRandom();
         byte[] bytes = new byte[8];
