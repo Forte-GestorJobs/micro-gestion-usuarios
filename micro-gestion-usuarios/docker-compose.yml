@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # Definición del servicio para la base de datos PostgreSQL
+  usersdb:
+    image: postgres:15.1-alpine
+    container_name: gestorjobs-users-db
+    environment:
+      POSTGRES_PASSWORD: 123
+      POSTGRES_USER: postgres
+      POSTGRES_DB: users_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - userdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # Definición del servicio para la imagen pruebamct
+  microgestionusuarios:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    #image: ghcr.io/forte-gestorjobs/micro-cloud-tareas:latest
+    environment:
+      MGU_DBHOST: usersdb
+      MGU_DBNAME: users_db
+      MGU_DBPORT: 5432
+      MGU_DBPWD: 123
+      MGU_DBUSER: postgres
+    ports:
+      - "8081:8081"
+    depends_on:
+      - usersdb
+    volumes:
+      - /tmp
+    restart: unless-stopped
+
+volumes:
+  userdata:
