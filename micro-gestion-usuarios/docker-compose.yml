@@ -15,16 +15,15 @@ services:
       - userdata:/var/lib/postgresql/data
     restart: unless-stopped
 
-  # Definición del servicio para la imagen pruebamct
   microgestionusuarios:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    #image: ghcr.io/forte-gestorjobs/micro-cloud-tareas:latest
+    #build:
+    #  context: .
+    #  dockerfile: Dockerfile
+    image: ghcr.io/forte-gestorjobs/micro-gestion-usuarios:latest
     environment:
       MGU_DBHOST: usersdb
       MGU_DBNAME: users_db
-      MGU_DBPORT: 5432
+      MGU_DBPORT: 5432 #Tener cuidado porque el puerto es el de dentro del contenedor usersdb
       MGU_DBPWD: 123
       MGU_DBUSER: postgres
     ports:
