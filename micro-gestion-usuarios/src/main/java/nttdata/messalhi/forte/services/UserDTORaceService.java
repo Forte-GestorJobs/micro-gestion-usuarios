@@ -1,12 +1,17 @@
 package nttdata.messalhi.forte.services;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import nttdata.messalhi.forte.auxi.UserDTO;
 import nttdata.messalhi.forte.dao.UserCredentialsDAO;
+import nttdata.messalhi.forte.dao.UserInfoDAO;
 import nttdata.messalhi.forte.entities.UserCredentials;
+import nttdata.messalhi.forte.entities.UserInfo;
 import nttdata.messalhi.forte.utils.DatabaseResult;
 import nttdata.messalhi.forte.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +23,9 @@ public class UserDTORaceService {
     private UserUtils userUtils = new UserUtils();
     @Autowired
     private UserCredentialsDAO userCredentialsDAO;
+
+    @Autowired
+    private UserInfoDAO userInfoDAO;
 
     @Autowired
     UserInfoRaceService userInfoRaceService = new UserInfoRaceService();
@@ -53,6 +61,18 @@ public class UserDTORaceService {
                 return ResponseEntity.badRequest().body(result.getMessage());
             }
         }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    public ResponseEntity<String> listUsers(Pageable pageable) {
+        try{
+            Page<UserInfo> usersPage = userInfoDAO.findAll(pageable);
+            ObjectMapper mapper = new ObjectMapper();
+            String usersJson = mapper.writeValueAsString(usersPage.getContent());
+            return ResponseEntity.ok(usersJson);
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
         }
