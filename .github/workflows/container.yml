@@ -30,14 +30,8 @@ jobs:
         working-directory: micro-gestion-usuarios
 
       - name: Construir contenedor Docker
-        run: docker build --build-arg MGU_DBHOST=$MGU_DBHOST --build-arg MGU_DBNAME=$MGU_DBNAME --build-arg MGU_DBPORT=$MGU_DBPORT --build-arg MGU_DBPWD=$MGU_DBPWD --build-arg MGU_DBUSER=$MGU_DBUSER -t micro-gestion-usuarios .
+        run: docker build -t micro-gestion-usuarios .
         working-directory: micro-gestion-usuarios
-        env:
-          MGU_DBHOST: ${{ secrets.MGU_DBHOST}}
-          MGU_DBNAME: ${{ secrets.MGU_DBNAME}}
-          MGU_DBPORT: ${{ secrets.MGU_DBPORT }}
-          MGU_DBPWD: ${{ secrets.MGU_DBPWD}}
-          MGU_DBUSER: ${{ secrets.MGU_DBUSER}}
 
       - name: Obtener la fecha actual
         id: get_date
