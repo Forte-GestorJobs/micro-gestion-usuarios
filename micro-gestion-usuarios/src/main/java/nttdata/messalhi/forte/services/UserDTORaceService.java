@@ -14,11 +14,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import javax.xml.crypto.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class UserDTORaceService {
+    Logger logger = LoggerFactory.getLogger(UserDTORaceService.class);
 
     private UserUtils userUtils = new UserUtils();
     @Autowired
@@ -113,21 +114,26 @@ public class UserDTORaceService {
     public ResponseEntity<String> checkUser(UserDTO userDTO) {
         try{
             String username = userDTO.getUsername();
+            logger.info("Petición checkUser para" + username);
             UserCredentials userCredentials = userCredentialsDAO.findById(username).orElse(null);
             if (userCredentials != null){
                 String passwordHash = userUtils.generateHash(userDTO.getPassword(), userCredentials.getSalt());
                 if (passwordHash.equals(userCredentials.getPassword())){
+                    logger.info("Usuario OK");
                     return ResponseEntity.ok(username + " OK");
                 }
                 else{
+                    logger.info("Usuario o contraseña incorrectos");
                     return ResponseEntity.status(401).body("Usuario o contraseña incorrectos");
                 }
             }
             else{
+                logger.info("Usuario o contraseña incorrectos");
                 return ResponseEntity.status(401).body("Usuario o contraseña incorrectos");
             }
         } catch (Exception e) {
             e.printStackTrace();
+            logger.info("Error interno: "+ e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
     }
