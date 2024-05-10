@@ -27,7 +27,7 @@ services:
       MGU_DBPWD: ${MGU_DBPWD}
       MGU_DBUSER: ${MGU_DBUSER}
     ports:
-      - "8081:8081"
+      - "443:443"
     depends_on:
       - usersdb
     volumes:

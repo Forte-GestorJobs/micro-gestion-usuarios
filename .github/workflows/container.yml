@@ -25,6 +25,10 @@ jobs:
           distribution: 'temurin'
           architecture: x64
 
+      - name: Construir crt del servidor
+        run: echo ${{ secrets.B64_CERT }} | base64 --decode > src/main/resources/local-ssl.p12
+        working-directory: micro-gestion-usuarios
+
       - name: Construir con Maven
         run: mvn clean package
         working-directory: micro-gestion-usuarios
