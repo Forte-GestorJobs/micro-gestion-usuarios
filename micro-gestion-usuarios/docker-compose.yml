@@ -6,9 +6,9 @@ services:
     image: postgres:15.1-alpine
     container_name: gestorjobs-users-db
     environment:
-      POSTGRES_PASSWORD: 123
-      POSTGRES_USER: postgres
-      POSTGRES_DB: users_db
+      POSTGRES_PASSWORD: ${MGU_DBPWD}
+      POSTGRES_USER: ${MGU_DBUSER}
+      POSTGRES_DB: ${MGU_DBNAME}
     ports:
       - "5433:5432"
     volumes:
@@ -22,12 +22,12 @@ services:
     image: ghcr.io/forte-gestorjobs/micro-gestion-usuarios:latest
     environment:
       MGU_DBHOST: usersdb
-      MGU_DBNAME: users_db
+      MGU_DBNAME: ${MGU_DBNAME}
       MGU_DBPORT: 5432 #Tener cuidado porque el puerto es el de dentro del contenedor usersdb
-      MGU_DBPWD: 123
-      MGU_DBUSER: postgres
+      MGU_DBPWD: ${MGU_DBPWD}
+      MGU_DBUSER: ${MGU_DBUSER}
     ports:
-      - "8081:8081"
+      - "443:443"
     depends_on:
       - usersdb
     volumes:
