@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
-@Table(name = "credentials")
+@Table(name = "user_credentials")
 public class UserCredentials {
     @Id
     @Column(name = "username")
